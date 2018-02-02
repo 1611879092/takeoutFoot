@@ -1,11 +1,147 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="ch-CN" style="height: 100%">
+<head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+    <% include head.ejs %>
+    <style>
+        .aui-flex-item-9 .aui-list{display: none}
+        .aui-flex-item-9 .aui-list.active{display: block}
+    </style>
+</head>
+<body style="height: 100%">
+<div class="aui-content" id="app" style="height: 100%">
+    <div class="aui-flex-col aui-flex-center" style="height: 100%">
+        <div class="aui-flex-item-3 aui-flex-row" style="height: 100%;background: #efefef">
+            <ul class="aui-list menu">
+                <li class="aui-list-item aui-padded-t-5 aui-padded-b-5" v-for="(cla,index) in shops" @click="getShops(index)">
+                    <div class="aui-list-item-inner" v-text="cla.name"></div>
+                </li>
+            </ul>
+        </div>
+        <div class="aui-flex-item-9">
+            <ul class="aui-list aui-media-list" v-for="(shop,index) in shops" style="background-image: none">
+                <li class="aui-list-header" v-text="shop.name"></li>
+                <li class="aui-list-item" v-for="(product,productIndex) in shop.Products">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media">
+                            <img :src="product.img">
+                        </div>
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title" v-text="product.name"></div>
+                            </div>
+                            <div class="aui-list-item-text aui-ellipsis-2 aui-margin-t-5 aui-margin-b-5" v-text="product.con"></div>
+                            <div class="aui-info aui-margin-t-5" style="padding:0">
+                                <div class="aui-info-item">赞12</div>
+                            </div>
+                            <div class="aui-info aui-margin-t-5" style="padding:0">
+                                <div class="aui-info-item aui-text-danger aui-font-size-18" v-text="'¥'+product.price"></div>
+                                <div class="aui-list-item-right">
+                                    <div class="aui-bar aui-bar-btn aui-bar-btn-sm">
+                                        <div class="aui-bar-btn-item" v-bind:class="{ btnHide : product.count == 0}"  @click="reduce(index,productIndex)">
+                                            <i class="aui-iconfont aui-icon-minus"></i>
+                                        </div>
+                                        <div class="aui-bar-btn-item" v-bind:class="{ btnHide : product.count == 0}">
+                                            <input type="number" :value="product.count" class="aui-input aui-text-center">
+                                        </div>
+                                        <div class="aui-bar-btn-item" @click="add(index,productIndex)">
+                                            <i class="aui-iconfont aui-icon-plus"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="cart" class="cart">
+        <div class="cart-tip">
+            <div class="j-cart-icon cart-icon">
+                <i class="j-ico-cart ico-cart" v-bind:class="{ 'ico-cart-active' : counts != 0 }"></i>
+                <div class="j-cart-num cart-num" v-text="counts"></div>
+            </div>
+            <div class="j-cart-empty cart-empty" v-if="counts == 0">购物车空空如也～</div>
+            <div class="j-cart-noempty cart-noempty" v-if="counts != 0">
+                <span class="j-cart-price cart-price" v-text="'¥'+allNumber"></span>
+                <br>
+                <span class="cart-shipping">另需配送 ¥15</span>
+            </div>
+        </div>
+        <div class="cart-btns">
+            <a class="cart-btn-confirm j-cart-btn-confirm" v-if="counts != 0" href="javascript:;" data-resource="1"><span class="inner">去结算</span></a>
+            <a class="cart-btn-unavail"><span class="inner" v-if="counts == 0">¥0起送</span></a>
+        </div>
+    </div>
+</div>
+
+</body>
+<% include foot.ejs %>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            classify: [],   //分类列表
+            shops: [],      //当前分类下的商品
+            sureShops:[]    //选定的商品
+            ,counts:0
+            ,allNumber:0
+        },
+        created: function () {
+            const self = this;
+            $.ajax({
+                url: "products",
+                type: 'POST',
+                data: {'id': '1'},
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data)
+                    for(var i=0;i<data.data.length;i++){
+                        for(var j=0;j<data.data[i].Products.length;j++){
+                            data.data[i].Products[j].count = 0;
+                        }
+                    }
+                    self.shops = data.data;
+                },
+                error: function (e) {
+                    console.log(e)
+                }
+            });
+        },
+        methods:{
+            changes:function () {
+                this.counts = 0;
+                this.allNumber = 0;
+                for(var i=0;i<this.shops.length;i++){
+                    for(var j=0;j<this.shops[i].Products.length;j++){
+                        this.counts += this.shops[i].Products[j].count;
+                        this.allNumber += (this.shops[i].Products[j].count*this.shops[i].Products[j].price);
+                    }
+                }
+            },
+            getShops:function (id) {
+                $(".aui-flex-item-9 .aui-list").eq(id).addClass("active").siblings().removeClass("active");
+            },
+            add:function (index,productIndex) {
+                this.shops[index].Products[productIndex].count += 1;
+                this.changes();
+            },
+            reduce:function (index,productIndex) {
+                if(this.shops[index].Products[productIndex].count == 0){
+                    return false;
+                }
+                this.shops[index].Products[productIndex].count -= 1;
+                this.changes();
+            }
+        }
+    });
+    $(function () {
+        $(".menu li:first-child").addClass("active")
+        $(".aui-flex-item-9 .aui-list:first-child").addClass("active")
+        $(".menu li").click(function () {
+            $(this).addClass("active").siblings().removeClass("active");
+        })
+    })
+</script>
 </html>

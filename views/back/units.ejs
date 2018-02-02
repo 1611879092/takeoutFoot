@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ch-CN">
+<head>
+    <title><%= title %></title>
+    <% include head.ejs %>
+</head>
+<body class="layui-layout-body" style="padding: 15px;">
+    <div class="layui-btn layui-btn-normal" id="add">新增</div>
+    <table class="layui-table" lay-data="{url:'/back/units', page:true, id:'menus', method:'post'}" lay-filter="menus">
+        <thead>
+        <tr>
+            <th lay-data="{field:'id', width:80, sort: true}">ID</th>
+            <th lay-data="{field:'name',}">名称</th>
+            <th lay-data="{width:250, toolbar: '#barDemo'}">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <form class="layui-form MainForm" style="display: none" id="addUnit">
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" id="name" required lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+        <input type="hidden" name="id" id="menuid">
+    </form>
+</body>
+<% include foot.ejs %>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    //JavaScript代码区域
+    layui.use(['element', 'table','layer','form'], function () {
+        var element = layui.element, table = layui.table, layer = layui.layer, form = layui.form;
+        table.on('tool(menus)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            if(layEvent === 'detail'){ //查看
+                //do somehing
+            } else if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    $.ajax({
+                        url:"units/delete",
+                        type:'POST',
+                        dataType:'json',
+                        data:{'id':data.id},
+                        success:function(data) {
+                            if(data.code == 200){
+                                layer.msg(data.msg);
+                            }
+                        },
+                        error:function (e) {
+                            console.log(e)
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){ //编辑
+                $("#addUnit #name").val(data.name)
+                $("#addUnit #menuid").val(data.id)
+                layer.open({
+                    type: 1,
+                    content: $('#addUnit'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    area: '500px',
+                    cancel:function (index, layero) {
+                        layer.close(index)
+                        $("#addUnit input").val('');
+                        return false;
+                    }
+                });
+            }
+        });
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            $.ajax({
+                url:"units/add",
+                type:'POST',
+                dataType:'json',
+                data:data.field,
+                success:function(data) {
+                    if(data.code == 200){
+                        layer.msg(data.msg);
+                        table.reload('menus', {
+                            url: '/back/units'
+                        });
+                    }
+                },
+                error:function () {
+                }
+            });
+            return false;
+        });
+        // 点击新增按钮
+        $("#add").click(function () {
+            layer.open({
+                type: 1,
+                content: $('#addUnit'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                area: '400px'
+            });
+        })
+    });
+</script>
+</html>

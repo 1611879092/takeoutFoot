@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ch-CN">
+<head>
+    <title><%= title %></title>
+    <% include head.ejs %>
+</head>
+<body class="layui-layout-body" style="padding: 15px;">
+    <div id="app">
+        <div class="layui-btn layui-btn-normal" id="add">新增</div>
+        <table class="layui-table" lay-filter="shops">
+            <thead>
+            <tr>
+                <th lay-data="{field:'id', width:80, sort: true}">ID</th>
+                <th lay-data="{field:'name'}">名称</th>
+                <th lay-data="{field:'price', width:200, sort: true}">价格</th>
+                <th lay-data="{field:'Classify', width:200}">所属分类</th>
+                <th lay-data="{field:'fabulous', width:200}">点赞数</th>
+                <th lay-data="{field:'con', width:200}">简介</th>
+                <th lay-data="{width:250, toolbar: '#barDemo'}">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="shop in shops">
+                <td v-text="shop.id"></td>
+                <td v-text="shop.name"></td>
+                <td v-text="shop.price"></td>
+                <td v-text="shop.Classify.name"></td>
+                <td v-text="shop.fabulous"></td>
+                <td v-text="shop.con"></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+        <form class="layui-form MainForm" style="display: none" id="addShop">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" id="name" required lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">价格</label>
+                <div class="layui-input-inline" style="width:30%">
+                    <input type="number" name="price" id="price" required lay-verify="required" placeholder="请输入价格" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-input-inline" style="width: 1%;line-height: 38px">
+                    /
+                </div>
+                <div class="layui-input-inline" style="width: 30%">
+                    <select name="unitID" id="unit">
+                        <option value=""></option>
+                        <option :value="unit.id" v-for="unit in units">{{unit.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属分类</label>
+                <div class="layui-input-block">
+                    <select name="claId" lay-verify="required" id="claId">
+                        <option value=""></option>
+                        <option :value="cla.id" v-for="cla in classify">{{cla.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品库存</label>
+                <div class="layui-input-block">
+                    <input type="number" name="stock" id="stock" required lay-verify="required" placeholder="请输入库存" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">详细介绍</label>
+                <div class="layui-input-block">
+                    <textarea name="con" id="con" placeholder="请输入详细介绍" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">图片</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test1">
+                        <i class="layui-icon">&#xe67c;</i>上传图片
+                    </button>
+                    <img src="" alt="" id="picture">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+            <input type="hidden" name="id" id="shopid">
+            <input type="hidden" name="img" id="shopImg">
+        </form>
+    </div>
+</body>
+<% include foot.ejs %>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    new Vue({
+        el:'#app',
+        data:{
+            classify:[],
+            shops:[],
+            units:[]
+        },
+        created:function(){
+            const self = this;
+            // 获得所有商品
+            $.ajax({
+                url:"shops",
+                type:'POST',
+                dataType:'json',
+                success:function(data) {
+                    console.log(data)
+                    self.shops = data.data
+                },
+                error:function (e) {
+                    console.log(e)
+                }
+            });
+            // 获得所有单位
+            $.ajax({
+                url:"units",
+                type:'POST',
+                dataType:'json',
+                success:function(data) {
+                    self.units = data.data
+                },
+                error:function (e) {
+                    console.log(e)
+                }
+            });
+            // 获得所有分类
+            $.ajax({
+                url:"menu",
+                type:'POST',
+                dataType:'json',
+                success:function(data) {
+                    self.classify = data.data
+                },
+                error:function (e) {
+                    console.log(e)
+                }
+            });
+        }
+    });
+</script>
+<script>
+    layui.use(['element', 'table','layer','form','upload'], function () {
+        const element = layui.element, table = layui.table, layer = layui.layer, form = layui.form, upload = layui.upload;
+        table.init('shops', { //转化静态表格
+            page: true
+        });
+        table.on('tool(shops)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            const data = obj.data; //获得当前行数据
+            const layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            const tr = obj.tr; //获得当前行 tr 的DOM对象
+            if(layEvent === 'detail'){ //查看
+                //do somehing
+            } else if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    $.ajax({
+                        url:"shops/delete",
+                        type:'POST',
+                        dataType:'json',
+                        data:{'id':data.id},
+                        success:function(data) {
+                            if(data.code == 200){
+                                layer.msg(data.msg);
+                            }
+                        },
+                        error:function (e) {
+                            console.log(e)
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){ //编辑
+                $("#addShop #name").val(data.name)
+                $("#addShop #price").val(data.price)
+                console.log(data)
+                $("#addShop #claId").val(data.claId)
+                $("#addShop #con").val(data.con)
+                $("#addShop #picture").attr('src',data.img)
+                $("#addShop #shopImg").val(data.img)
+                $("#addShop #shopid").val(data.id)
+                layer.open({
+                    type: 1,
+                    content: $('#addShop'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    area: '500px',
+                    cancel:function (index, layero) {
+                        layer.close(index)
+                        $("#addShop input,#addShop textarea").val('');
+                        $("#addShop img").attr('src','');
+                        return false;
+                    }
+                });
+            }
+        });
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            $.ajax({
+                url:"shops/add",//待完成
+                type:'POST',//提交方式 GET POST PUT DELETE
+                dataType:'json',
+                data:data.field,
+                success:function(data) {
+                    if(data.code == 200){
+                        layer.msg(data.msg);
+                        table.reload('shops', {
+                            url: '/back/shops'
+                        });
+                    }
+                },
+                error:function (e) {
+                    console.log(e)
+                }
+            });
+            return false;
+        });
+
+        //选择图片后上传
+        const uploadInst = upload.render({
+            elem: '#test1' //绑定元素
+            ,url: '/file/uploading'
+            ,done: function(res){
+                //上传完毕回调
+                $("#picture").attr("src",'/'+res.data.file[0].path.substr(7));
+                $("#shopImg").val('/'+res.data.file[0].path.substr(7));
+            },error: function(){
+                //请求异常回调
+            }
+        });
+        // 点击新增按钮
+        $("#add").click(function () {
+            layer.open({
+                type: 1,
+                content: $('#addShop'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                area: '500px',
+                cancel:function (index, layero) {
+                    layer.close(index)
+                    $("#addShop input,#addShop textarea").val('');
+                    $("#addShop img").attr('src','');
+                    return false;
+                }
+            });
+        })
+    });
+</script>
+</html>

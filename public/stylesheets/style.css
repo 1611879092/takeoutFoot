@@ -1,8 +1,121 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.MainForm {
+    padding: 20px 20px 0 0;
 }
 
-a {
-  color: #00B7FF;
+.menu {
+    background: none
+}
+
+.menu li.active {
+    background: #ffffff;
+}
+
+.btnHide {
+    display: none;
+}
+
+.cart {
+    position: fixed;
+    bottom: 0;
+    z-index: 9000;
+    width: 100%;
+    height: 50px;
+    background-color: rgba(51, 51, 51, 0.9);
+    border-top: 1px solid #cacaca;
+}
+
+.cart-tip {
+    color: #999;
+    padding-left: 12px;
+}
+
+.cart-btns {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+}
+.cart-btn-unavail{
+    height: 50px;
+    line-height:50px;padding-right: 1rem;
+}
+.cart-btn-unavail .inner {
+    background: transparent;
+    color: #999;
+}
+
+.cart-icon {
+    float: left;
+    position: relative;
+    top: -18px;
+    margin-right: 10px;
+}
+
+.ico-cart, .spec-ico-cart {
+    display: block;
+    width: 50px;
+    height: 57px;
+    background: url(//xs01.meituan.net/waimai_i/img/cart.ab827c23.png) no-repeat;
+    -webkit-background-size: 50px auto;
+    -moz-background-size: 50px auto;
+    background-size: 50px auto;
+}
+
+.cart-num {
+    border-radius: 50% 50%;
+    background-color: #FB4E44;
+    width: 15px;
+    height: 15px;
+    line-height: 16px;
+    font-size: 12px;
+    text-align: center;
+    position: absolute;
+    top: 2px;
+    right: 0;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+.cart-price {
+    font-size: 20px;
+    margin-left: 4px;
+    color: #fff;
+    line-height: 35px;
+}
+
+.cart-shipping {
+    display: block;
+    font-size: 12px;
+    margin-left: 4px;
+    margin-top: -7px;
+}
+
+.cart-btn-confirm {
+    display: block;
+    height: 100%;
+}
+
+.cart-btn-confirm .inner{
+    display: block;
+    width: 110px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    text-align: center;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.cart-btn-confirm .inner {
+    background-color: #FFD161;
+    color: #333;
+}
+
+.ico-cart.ico-cart-active {
+    background-position: 0 -57px;
+}
+
+.j-cart-empty.cart-empty{
+    line-height: 50px;
 }
