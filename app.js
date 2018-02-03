@@ -5,11 +5,10 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const index = require('./routes/index');
-const users = require('./routes/users');
 const classify = require('./routes/classify');
 const dish = require('./routes/dish');
 const file = require('./routes/file');
-const databases = require('./define/databases');
+const database = require('./define/databases');
 
 
 

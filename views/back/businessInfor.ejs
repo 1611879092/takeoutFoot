@@ -1,8 +1,13 @@
 <!DOCTYPE html>
+<!--suppress JSAnnotator -->
 <html lang="ch-CN">
 <head>
     <title><%= title %></title>
     <% include head.ejs %>
+    <style>
+        #picture img{width: 30%;display: inline-block;}
+        .invoiceBox{display: none}
+    </style>
 </head>
 <body class="layui-layout-body" style="padding: 15px;">
     <div class="layui-btn layui-btn-normal" id="addBtn">新增</div>
@@ -17,6 +22,7 @@
             <th lay-data="{field:'distributionfee'}">配送费</th>
             <th lay-data="{field:'sendfee'}">起送费</th>
             <th lay-data="{field:'invoice'}">能否开发票</th>
+            <th lay-data="{field:'invoice'}">能否开发票</th>
             <th lay-data="{width:250, toolbar: '#barDemo'}">操作</th>
         </tr>
         </thead>
@@ -28,10 +34,10 @@
                 <input type="text" name="name" id="name" required lay-verify="required" placeholder="请输入名称" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
+        <!--<div class="layui-form-item">
             <label class="layui-form-label">电话</label>
             <div class="layui-input-block">
-                <input type="text" name="phone" id="phone" required lay-verify="required" placeholder="请输入电话" class="layui-input">
+                <input type="number" name="phone" id="phone" required lay-verify="required" placeholder="请输入电话" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -49,13 +55,13 @@
         <div class="layui-form-item">
             <label class="layui-form-label">配送费</label>
             <div class="layui-input-block">
-                <input type="text" name="distributionfee" id="distributionfee" required lay-verify="required" placeholder="请输入配送费" class="layui-input">
+                <input type="number" name="distributionfee" id="distributionfee" required lay-verify="required" placeholder="请输入配送费" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">起送费</label>
             <div class="layui-input-block">
-                <input type="text" name="sendfee" id="sendfee" required lay-verify="required" placeholder="请输入起送费" class="layui-input">
+                <input type="number" name="sendfee" id="sendfee" required lay-verify="required" placeholder="请输入起送费" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -64,14 +70,21 @@
                 <button type="button" class="layui-btn" id="test1">
                     <i class="layui-icon">&#xe67c;</i>上传图片
                 </button>
+                <ul id="picture"></ul>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">是否开具发票</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="invoice" id="invoice" lay-skin="switch">
+                <input type="checkbox" lay-filter="invoice" lay-skin="switch">
             </div>
         </div>
+        <div class="layui-form-item invoiceBox">
+            <label class="layui-form-label">最低金额</label>
+            <div class="layui-input-block">
+                <input type="number" name="invoice" id="invoice" class="layui-input">
+            </div>
+        </div>-->
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn layui-btn-normal" lay-submit lay-filter="formDemo">立即提交</button>
@@ -79,11 +92,11 @@
             </div>
         </div>
         <input type="hidden" name="id" id="menuid">
+        <input type="hidden" name="qualification" id="qualification">
     </form>
 </body>
 <% include foot.ejs %>
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 
@@ -93,13 +106,14 @@
     {{#  } }}
 </script>
 <script>
+    const invoiceBox = false;
     //JavaScript代码区域
     layui.use(['element', 'table','layer','form','upload'], function () {
-        var element = layui.element, table = layui.table, layer = layui.layer, form = layui.form, upload = layui.upload;
+        const element = layui.element, table = layui.table, layer = layui.layer, form = layui.form, upload = layui.upload;
         table.on('tool(menus)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-            var data = obj.data; //获得当前行数据
-            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            const data = obj.data; //获得当前行数据
+            const layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            const tr = obj.tr; //获得当前行 tr 的DOM对象
             if(layEvent === 'detail'){ //查看
                 //do somehing
             } else if(layEvent === 'del'){ //删除
@@ -136,10 +150,25 @@
                 });
             }
         });
+        form.on('switch(invoice)', function(data){
+            //console.log(data.elem); 得到checkbox原始DOM对象
+            //console.log(data.value); //开关value值，也可以通过data.elem.value得到
+            //console.log(data.othis); 得到美化后的DOM对象
+            //console.log(data.elem.checked); //开关是否开启，true或者false
+            if(data.elem.checked){
+                $(".invoiceBox").show()
+                $("#invoice").val(0);
+            }else {
+                $(".invoiceBox").hide();
+                $("#invoice").val(-1);
+            }
+            invoiceBox = data.elem.checked;
+        });
         //监听提交
         form.on('submit(formDemo)', function(data){
+            console.log(data.field)
             $.ajax({
-                url:"menu/add",
+                url:"businessInfor/add",
                 type:'POST',
                 dataType:'json',
                 data:data.field,
@@ -147,8 +176,10 @@
                     if(data.code == 200){
                         layer.msg(data.msg);
                         table.reload('menus', {
-                            url: '/back/menu'
+                            url: '/back/businessInfor'
                         });
+                    }else {
+                        layer.msg(data.msg);
                     }
                 },
                 error:function () {
@@ -156,7 +187,6 @@
             });
             return false;
         });
-
         //选择图片后上传
         var uploadInst = upload.render({
             elem: '#test1' //绑定元素
@@ -164,8 +194,8 @@
             ,done: function(res){
                 //上传完毕回调
                 console.log(res)
-                $("#picture").attr("src",'/'+res.data.file[0].path.substr(7));
-                $("#shopImg").val('/'+res.data.file[0].path.substr(7));
+                $("#picture").append('<li><img src="/'+ res.data.file[0].path.substr(7)  +'"></li>');
+                $("#qualification").val($("#qualification").val()+',/'+res.data.file[0].path.substr(7));
             },error: function(){
                 //请求异常回调
             }

@@ -1,25 +1,133 @@
 <!DOCTYPE html>
+<!--suppress JSAnnotator -->
 <html lang="ch-CN">
 <head>
     <title><%= title %></title>
     <% include head.ejs %>
 </head>
-<body class="layui-layout-body" style="padding: 15px;">
-    <div class="layui-btn layui-btn-normal" id="add">新增</div>
-    <table class="layui-table" lay-data="{url:'/back/menu', page:true, id:'menus', method:'post'}" lay-filter="menus">
-        <thead>
-        <tr>
-            <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-            <th lay-data="{field:'name',}">名称</th>
-            <th lay-data="{width:250, toolbar: '#barDemo'}">操作</th>
-        </tr>
-        </thead>
-    </table>
+<body>
+<div id="app">
+    <div class="page-header">
+        <h4>分类列表</h4>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target=".bs-example-modal-lg">新增</button>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th style="width: 40px"><input type="checkbox"></th>
+                    <th>id</th>
+                    <th>名称</th>
+                    <th>所属分店</th>
+                    <th style="width: 200px">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="menu in menus">
+                    <td><input type="checkbox"></td>
+                    <td v-text="menu.id"></td>
+                    <td v-text="menu.name"></td>
+                    <td>
+                        <template v-for="BusinessInfor in menu.BusinessInfors">{{BusinessInfor.name + ','}}</template>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#changeModel" data-whatever="@getbootstrap">编辑</button>
+                        <button type="button" class="btn btn-danger btn-xs">删除</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-info">新增</button>
+        </div>
+    </div>
+    <div class="modal fade bs-example-modal-lg" id="addModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myLargeModalLabel">新增分类</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="addForm">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="请输入名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">所属分店</label>
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    <label v-for="busi in business">
+                                        <input type="checkbox" :value="busi.id" name="BusinessInforId">{{busi.name}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" onclick="" class="btn btn-default">新增</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="changeModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myLargeModalLabel">修改分类</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="changeForm">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="请输入名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">所属分店</label>
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    <label v-for="busi in business">
+                                        <input type="checkbox" :value="busi.id" name="BusinessInforId">{{busi.name}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" onclick="" class="btn btn-default">新增</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <form class="layui-form MainForm" style="display: none" id="addShop">
         <div class="layui-form-item">
             <label class="layui-form-label">名称</label>
             <div class="layui-input-block">
-                <input type="text" name="name" id="name" required lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+                <input type="text" name="name" id="name" required lay-verify="required" placeholder="请输入名称"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属分店</label>
+            <div class="layui-input-block">
+                <!--<input type="checkbox" title="全部" lay-skin="primary">-->
+
             </div>
         </div>
         <div class="layui-form-item">
@@ -28,57 +136,96 @@
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
-        <input type="hidden" name="id" id="menuid">
     </form>
+</div>
 </body>
 <% include foot.ejs %>
-<script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-
-    <!-- 这里同样支持 laytpl 语法，如： -->
-    {{#  if(d.auth > 2){ }}
-    <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
-    {{#  } }}
+<script>
+    $('#changeModel').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever') // Extract info from data-* attributes
+        console.log(recipient);
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('.modal-title').text('New message to ' + recipient)
+        modal.find('.modal-body input').val(recipient)
+    })
 </script>
 <script>
-    //JavaScript代码区域
-    layui.use(['element', 'table','layer','form','upload'], function () {
+    new Vue({
+        el: '#app',
+        data: {
+            business: [],
+            menus: []
+        },
+        created: function () {
+            const self = this;
+            // 获得所有分类
+            $.ajax({
+                url: "menu",
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    self.menus = data.data;
+                },
+                error: function (e) {
+                    console.log(e)
+                }
+            });
+            // 获得所有分店
+            $.ajax({
+                url: "businessInfor",
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    self.business = data.data
+                },
+                error: function (e) {
+                    console.log(e)
+                }
+            });
+        }
+    });
+</script>
+<script>
+    var businessIds = "";
+    layui.use(['element', 'table', 'layer', 'form', 'upload'], function () {
         var element = layui.element, table = layui.table, layer = layui.layer, form = layui.form, upload = layui.upload;
-        table.on('tool(menus)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        table.on('tool(menus)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
-            if(layEvent === 'detail'){ //查看
+            if (layEvent === 'detail') { //查看
                 //do somehing
-            } else if(layEvent === 'del'){ //删除
-                layer.confirm('真的删除行么', function(index){
+            } else if (layEvent === 'del') { //删除
+                layer.confirm('真的删除行么', function (index) {
                     obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
                     layer.close(index);
                     $.ajax({
-                        url:"menu/delete",
-                        type:'POST',
-                        dataType:'json',
-                        data:{'id':data.id},
-                        success:function(data) {
-                            if(data.code == 200){
+                        url: "menu/delete",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'id': data.id},
+                        success: function (data) {
+                            if (data.code == 200) {
                                 layer.msg(data.msg);
                             }
                         },
-                        error:function (e) {
+                        error: function (e) {
                             console.log(e)
                         }
                     });
                 });
-            } else if(layEvent === 'edit'){ //编辑
+            } else if (layEvent === 'edit') { //编辑
+                console.log(data)
                 $("#addShop #name").val(data.name)
                 $("#addShop #menuid").val(data.id)
                 layer.open({
                     type: 1,
                     content: $('#addShop'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                     area: '500px',
-                    cancel:function (index, layero) {
+                    cancel: function (index, layero) {
                         layer.close(index)
                         $("#addShop input").val('');
                         return false;
@@ -86,22 +233,33 @@
                 });
             }
         });
+        form.on('checkbox(BusinessInforId)', function(data){
+            businessIds +="," + data.value;
+            console.log(data);
+
+            //console.log(data.elem); //得到checkbox原始DOM对象
+            //console.log(data.elem.checked); //是否被选中，true或者false
+            //console.log(data.value); //复选框value值，也可以通过data.elem.value得到
+            //console.log(data.othis); //得到美化后的DOM对象
+        });
         //监听提交
-        form.on('submit(formDemo)', function(data){
+        form.on('submit(formDemo)', function (data) {
+            console.log(data.field)
+            console.log(businessIds)
             $.ajax({
-                url:"menu/add",
-                type:'POST',
-                dataType:'json',
-                data:data.field,
-                success:function(data) {
-                    if(data.code == 200){
+                url: "menu/add",
+                type: 'POST',
+                dataType: 'json',
+                data: {name: data.field.name, BusinessInforId: businessIds},
+                success: function (data) {
+                    if (data.code == 200) {
                         layer.msg(data.msg);
                         table.reload('menus', {
                             url: '/back/menu'
                         });
                     }
                 },
-                error:function () {
+                error: function () {
                 }
             });
             return false;
@@ -110,13 +268,13 @@
         //选择图片后上传
         var uploadInst = upload.render({
             elem: '#test1' //绑定元素
-            ,url: '/file/uploading'
-            ,done: function(res){
+            , url: '/file/uploading'
+            , done: function (res) {
                 //上传完毕回调
                 console.log(res)
-                $("#picture").attr("src",'/'+res.data.file[0].path.substr(7));
-                $("#shopImg").val('/'+res.data.file[0].path.substr(7));
-            },error: function(){
+                $("#picture").attr("src", '/' + res.data.file[0].path.substr(7));
+                $("#shopImg").val('/' + res.data.file[0].path.substr(7));
+            }, error: function () {
                 //请求异常回调
             }
         });
@@ -128,6 +286,10 @@
                 area: '400px'
             });
         })
+        table.init('menus', { //转化静态表格
+            page: true
+        });
     });
 </script>
+
 </html>

@@ -3,20 +3,26 @@ const router = express.Router();
 const sequelize = require("./database");
 
 
-/*const Classify = require('./Classify');
+const Classify = require('./Classify');
 const Product = require('./Product');
 const Unit = require('./Unit');
-const specifications = require('./specifications');*/
-
+const specifications = require('./specifications');
 const businessInfor = require('./BusinessInfor');
+const ClassAndBusiness =require('./ClassAndBusiness');
 
-/*Classify.hasMany(Product);
+
+
+
+Classify.hasMany(Product);
 Product.belongsTo(Classify);
 
 Unit.hasMany(Product);
-Product.belongsTo(Unit);*/
+Product.belongsTo(Unit);
 
-// sequelize.sync();
+businessInfor.belongsToMany(Classify,{through:'ClassAndBusiness'});
+Classify.belongsToMany(businessInfor,{through:'ClassAndBusiness'});
+
+// sequelize.sync({force:true});
 
 router.get('/', function(req, res, next) {
     res.send('respond with a resource');

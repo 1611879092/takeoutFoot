@@ -26,6 +26,4 @@ router.post('/products', function(req, res, next) {
   })
 });
 
-
-
 module.exports = router;
