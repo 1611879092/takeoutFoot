@@ -2,35 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5ad52f7-a5f9-4a47-b6ad-ed8c9d41cbb8" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/-omhpldqf_Lr_oMU4VM8QRuY.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/0G4zwS2iRoyLJtueev0eu8yA.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/CZdJ32j1_SkeGVqfdr8EdQyx.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/EdUx-QaNl154P4CpregkhstP.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/EmVoM8Wb7QqXRmiqqHLh1tZT.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/G8Fn1WC7rvzOQFe-7A9QlzTY.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/GipbchLrqzh8qzaAooFRtG9Y.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/IDyX-kBVx8mqugFaNKuGGHBb.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/IcfPQjnSw7uzsLaWr3HDNJfR.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/Iq6F26oke6FtUYIIjafdbxWH.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/K4WnouSRd9R9i3EEMV-V0gIq.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/MNyHEN8x6UIdKDTz6Zj4Eba5.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/PcdsTIPkUB3y22Euhk7cJ-24.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/b2TVMUO2R2RWSfohs5tWyaSM.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/hB0wrY0Z6JRXPNlt-KgbU8QW.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/kjCR3aGmDfUAKTPCNrTH5mPi.jpg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/public/files/wIhocEoCFkCtrrCsAHsJOXyR.jpg" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
-      <change beforePath="$PROJECT_DIR$/define/Classify.js" afterPath="$PROJECT_DIR$/define/Classify.js" />
-      <change beforePath="$PROJECT_DIR$/define/databases.js" afterPath="$PROJECT_DIR$/define/databases.js" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/style.css" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" />
-      <change beforePath="$PROJECT_DIR$/routes/back/businessInfor.js" afterPath="$PROJECT_DIR$/routes/back/businessInfor.js" />
-      <change beforePath="$PROJECT_DIR$/routes/back/menu.js" afterPath="$PROJECT_DIR$/routes/back/menu.js" />
-      <change beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
-      <change beforePath="$PROJECT_DIR$/views/back/businessInfor.ejs" afterPath="$PROJECT_DIR$/views/back/businessInfor.ejs" />
-      <change beforePath="$PROJECT_DIR$/views/back/foot.ejs" afterPath="$PROJECT_DIR$/views/back/foot.ejs" />
-      <change beforePath="$PROJECT_DIR$/views/back/head.ejs" afterPath="$PROJECT_DIR$/views/back/head.ejs" />
-      <change beforePath="$PROJECT_DIR$/views/back/index.ejs" afterPath="$PROJECT_DIR$/views/back/index.ejs" />
       <change beforePath="$PROJECT_DIR$/views/back/menus.ejs" afterPath="$PROJECT_DIR$/views/back/menus.ejs" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -48,11 +20,12 @@
       <file leaf-file-name="menus.ejs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/views/back/menus.ejs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="36" column="153" lean-forward="false" selection-start-line="36" selection-start-column="153" selection-end-line="36" selection-end-column="153" />
+            <state relative-caret-position="455">
+              <caret line="158" column="61" lean-forward="true" selection-start-line="158" selection-start-column="61" selection-end-line="158" selection-end-column="61" />
               <folding>
                 <element signature="n#style#0;n#th#0;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#th#4;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -122,13 +95,13 @@
         <option value="$PROJECT_DIR$/define/databases.js" />
         <option value="$PROJECT_DIR$/views/back/businessInfor.ejs" />
         <option value="$PROJECT_DIR$/routes/back/businessInfor.js" />
-        <option value="$PROJECT_DIR$/routes/back/menu.js" />
         <option value="$PROJECT_DIR$/views/back/foot.ejs" />
         <option value="$PROJECT_DIR$/public/stylesheets/bootstrap-theme.min.css" />
         <option value="$PROJECT_DIR$/views/back/head.ejs" />
         <option value="$PROJECT_DIR$/views/back/index.ejs" />
         <option value="$PROJECT_DIR$/public/stylesheets/style.css" />
         <option value="$PROJECT_DIR$/public/stylesheets/bootstrap.min.css" />
+        <option value="$PROJECT_DIR$/routes/back/menu.js" />
         <option value="$PROJECT_DIR$/views/back/menus.ejs" />
       </list>
     </option>
@@ -262,12 +235,12 @@
       <workItem from="1517542598228" duration="186000" />
       <workItem from="1517542786765" duration="1860000" />
       <workItem from="1517549760314" duration="18152000" />
-      <workItem from="1517621660749" duration="24134000" />
+      <workItem from="1517621660749" duration="25683000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44332000" />
+    <option name="totallyTimeSpent" value="45881000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -340,6 +313,7 @@
           <folding>
             <element signature="n#style#0;n#th#0;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#th#4;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -627,14 +601,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/back/menu.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="35" column="8" lean-forward="false" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="325">
@@ -686,13 +652,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/routes/back/menu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="20" column="26" lean-forward="true" selection-start-line="20" selection-start-column="26" selection-end-line="20" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/views/back/menus.ejs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="36" column="153" lean-forward="false" selection-start-line="36" selection-start-column="153" selection-end-line="36" selection-end-column="153" />
+        <state relative-caret-position="455">
+          <caret line="158" column="61" lean-forward="true" selection-start-line="158" selection-start-column="61" selection-end-line="158" selection-end-column="61" />
           <folding>
             <element signature="n#style#0;n#th#0;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#th#4;n#tr#0;n#thead#0;n#table#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
