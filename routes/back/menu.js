@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const co = require('co');
 var Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 const Classify = require('../../define/Classify');
 const BusinessInfor = require('../../define/BusinessInfor');
 
@@ -9,7 +10,7 @@ const BusinessInfor = require('../../define/BusinessInfor');
 router.get('/', function(req, res, next) {
   res.render('back/menus', { title: '' });
 });
-
+// 获取分类数据
 router.post('/',function (req, res) {
     co(function* () {
         const classify = yield Classify.findAndCountAll({
@@ -25,8 +26,34 @@ router.post('/',function (req, res) {
         console.log(e)
     });
 });
-
+// 筛选分类
+router.post('/filter',function (req, res) {
+    console.log(req.body);
+    co(function* () {
+        const classify = yield Classify.findAndCountAll({
+            include:[{
+                model:BusinessInfor,
+                attributes: ['name'],
+                required: true,
+                where:[{
+                    'id':req.body.BusinessInforId
+                }]
+            }],
+            distinct: true,
+            where:[{
+                'name':{
+                    [Op.like]: '%' + req.body.name + '%'
+                }
+            }]
+        });
+        res.status(200).json({code:0,msg:"获取成功",data:classify.rows})
+    }).catch(function (e) {
+        console.log(e)
+    });
+});
+// 添加分类
 router.post('/add',function (req, res) {
+    console.log(req.body)
     co(function* () {
         const findClassify = yield Classify.findOne({
             where:[{
@@ -35,14 +62,23 @@ router.post('/add',function (req, res) {
         });
         if(findClassify == null){
             const cs = yield Classify.create({'name':req.body.name});
-            req.body.BusinessInforId.substr(1).split(',').forEach(value => {
+            if(typeof req.body.BusinessInforId == 'string'){
                 co(function* () {
-                    var bs = yield BusinessInfor.findById(value);
+                    var bs = yield BusinessInfor.findById(req.body.BusinessInforId);
                     yield cs.addBusinessInfor(bs);
                 }).catch(function (e) {
                     console.log(e)
                 });
-            });
+            }else if(typeof req.body.BusinessInforId == 'object'){
+                for (let value of req.body.BusinessInforId){
+                    co(function* () {
+                        var bs = yield BusinessInfor.findById(value);
+                        yield cs.addBusinessInfor(bs);
+                    }).catch(function (e) {
+                        console.log(e)
+                    });
+                }
+            }
             res.status(200).json({code:200,msg:"添加成功"})
         }else {
             res.status(200).json({code:300,msg:"分类已存在"})
@@ -51,10 +87,54 @@ router.post('/add',function (req, res) {
         console.log(e);
     });
 });
-
+// 修改分类
+router.post('/change',function (req, res) {
+    co(function* () {
+        const cs = yield Classify.findOne({
+            where:[{
+                id:req.body.id
+            }]
+        });
+        cs.update({
+            'name': req.body.name
+        });
+        yield cs.setBusinessInfors([]);
+        if(typeof req.body.BusinessInforId == 'string'){
+            co(function* () {
+                var bs = yield BusinessInfor.findById(req.body.BusinessInforId);
+                yield cs.addBusinessInfor(bs);
+            }).catch(function (e) {
+                console.log(e)
+            });
+        }else if(typeof req.body.BusinessInforId == 'object'){
+            for (let value of req.body.BusinessInforId){
+                co(function* () {
+                    var bs = yield BusinessInfor.findById(value);
+                    yield cs.addBusinessInfor(bs);
+                }).catch(function (e) {
+                    console.log(e)
+                });
+            }
+        }
+        res.status(200).json({code:200,msg:"修改成功"})
+    }).catch(function (e) {
+        console.log(e);
+    });
+});
+// 删除分类
 router.post('/delete',function (req, res) {
-    Classify.destroy({'where':{'id':req.body.id}});
-    res.status(200).json({code:200,msg:"删除成功"})
+    co(function* () {
+        const cs = yield Classify.findOne({
+            where:[{
+                id:req.body.id
+            }]
+        });
+        yield cs.setBusinessInfors([]);
+        yield Classify.destroy({'where':{'id':req.body.id}});
+        res.status(200).json({code:200,msg:"删除成功"})
+    }).catch(function (e) {
+        console.log(e)
+    });
 });
 
 module.exports = router;

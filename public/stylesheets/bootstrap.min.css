@@ -3167,7 +3167,7 @@ select[multiple].input-lg, textarea.input-lg {
 .form-control-feedback {
     position: absolute;
     top: 0;
-    right: 0;
+    right: 15px;
     z-index: 2;
     display: block;
     width: 34px;
@@ -6384,7 +6384,7 @@ button.close {
 
 @media (min-width: 992px) {
     .modal-lg {
-        width: 900px
+        width: 700px
     }
 }
 
