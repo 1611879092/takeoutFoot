@@ -11,7 +11,10 @@ const BusinessInfor = sequelize.define('BusinessInfor',{
     'address':{                 //店铺地址
         type: Sequelize.STRING
     },
-    'distributionTime':{        //配送时间
+    'distributionTimeBegin':{        //配送开始时间
+        type: Sequelize.STRING
+    },
+    'distributionTimeEnd':{        //配送结束时间
         type: Sequelize.STRING
     },
     'qualification':{           //营业资质
@@ -24,7 +27,7 @@ const BusinessInfor = sequelize.define('BusinessInfor',{
         type: Sequelize.INTEGER
     },
     'invoice':{                 //是否开具发票
-        type:Sequelize.INTEGER
+        type:Sequelize.STRING
     },
     'coordinate':{              //坐标（x,y）
         type:Sequelize.STRING

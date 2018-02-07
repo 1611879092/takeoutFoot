@@ -53,18 +53,24 @@ router.post('/filter',function (req, res) {
 });
 // 添加分类
 router.post('/add',function (req, res) {
-    console.log(req.body)
+    if(!req.body.BusinessInforId || req.body.BusinessInforId.trim() == '' ){
+        res.status(200).json({code:300,msg:"请选择分店"});
+        return false;
+    }else if(!req.body.name || req.body.name.trim() == ''){
+        res.status(200).json({code:300,msg:"请输入分类名称"});
+        return false;
+    }
     co(function* () {
         const findClassify = yield Classify.findOne({
             where:[{
-                name:req.body.name
+                name:req.body.name.trim()
             }]
         });
         if(findClassify == null){
-            const cs = yield Classify.create({'name':req.body.name});
+            const cs = yield Classify.create({'name':req.body.name.trim()});
             if(typeof req.body.BusinessInforId == 'string'){
                 co(function* () {
-                    var bs = yield BusinessInfor.findById(req.body.BusinessInforId);
+                    var bs = yield BusinessInfor.findById(req.body.BusinessInforId.trim());
                     yield cs.addBusinessInfor(bs);
                 }).catch(function (e) {
                     console.log(e)
@@ -72,7 +78,7 @@ router.post('/add',function (req, res) {
             }else if(typeof req.body.BusinessInforId == 'object'){
                 for (let value of req.body.BusinessInforId){
                     co(function* () {
-                        var bs = yield BusinessInfor.findById(value);
+                        var bs = yield BusinessInfor.findById(value.trim());
                         yield cs.addBusinessInfor(bs);
                     }).catch(function (e) {
                         console.log(e)
@@ -92,16 +98,16 @@ router.post('/change',function (req, res) {
     co(function* () {
         const cs = yield Classify.findOne({
             where:[{
-                id:req.body.id
+                id:req.body.id.trim()
             }]
         });
         cs.update({
-            'name': req.body.name
+            'name': req.body.name.trim()
         });
         yield cs.setBusinessInfors([]);
         if(typeof req.body.BusinessInforId == 'string'){
             co(function* () {
-                var bs = yield BusinessInfor.findById(req.body.BusinessInforId);
+                var bs = yield BusinessInfor.findById(req.body.BusinessInforId.trim());
                 yield cs.addBusinessInfor(bs);
             }).catch(function (e) {
                 console.log(e)
@@ -109,7 +115,7 @@ router.post('/change',function (req, res) {
         }else if(typeof req.body.BusinessInforId == 'object'){
             for (let value of req.body.BusinessInforId){
                 co(function* () {
-                    var bs = yield BusinessInfor.findById(value);
+                    var bs = yield BusinessInfor.findById(value.trim());
                     yield cs.addBusinessInfor(bs);
                 }).catch(function (e) {
                     console.log(e)
@@ -126,11 +132,11 @@ router.post('/delete',function (req, res) {
     co(function* () {
         const cs = yield Classify.findOne({
             where:[{
-                id:req.body.id
+                id:req.body.id.trim()
             }]
         });
         yield cs.setBusinessInfors([]);
-        yield Classify.destroy({'where':{'id':req.body.id}});
+        yield Classify.destroy({'where':{'id':req.body.id.trim()}});
         res.status(200).json({code:200,msg:"删除成功"})
     }).catch(function (e) {
         console.log(e)

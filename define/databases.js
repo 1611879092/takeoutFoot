@@ -2,16 +2,12 @@ const express = require('express');
 const router = express.Router();
 const sequelize = require("./database");
 
-
 const Classify = require('./Classify');
 const Product = require('./Product');
 const Unit = require('./Unit');
 const specifications = require('./specifications');
 const businessInfor = require('./BusinessInfor');
 const ClassAndBusiness =require('./ClassAndBusiness');
-
-
-
 
 Classify.hasMany(Product);
 Product.belongsTo(Classify);

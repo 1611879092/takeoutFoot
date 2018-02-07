@@ -5,3 +5,5 @@
 #app {
     margin: 20px
 }
+
+#addForm .control-label font{color: #ff0000}

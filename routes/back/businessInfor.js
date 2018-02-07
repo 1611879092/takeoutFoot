@@ -19,14 +19,45 @@ router.post('/',function (req, res) {
 });
 
 router.post('/add',function (req, res) {
+    console.log(req.body)
+    if(!req.body.name || req.body.name.trim() == ''){
+        res.status(200).json({code:300,'msg':'请输入分类名称'});
+        return false;
+    }
+    if (req.body.qualification == undefined){
+        req.body.qualification=''
+    }
+    if (req.body.invoice == undefined){
+        req.body.invoice=''
+    }
+    var distributionTimeBegin = '';
+    var distributionTimeEnd = '';
+    for (var k in req.body){
+        if(k.indexOf('distributionTimeBegin') != -1){
+            distributionTimeBegin += ',' + req.body[k]
+        }else if(k.indexOf('distributionTimeEnd') != -1){
+            distributionTimeEnd += ',' + req.body[k]
+        }
+    }
     co(function* () {
-        const businessInfor = yield BusinessInfor.findAll({
+        const businessInfor = yield BusinessInfor.findOne({
             where:{
-                name:req.body.name
+                name:req.body.name.trim()
             }
         });
-        if(businessInfor.length == 0){
-            var bc = yield BusinessInfor.create({'name': req.body.name});
+        if(businessInfor == null){
+            var bc = yield BusinessInfor.create({
+                'name': req.body.name.trim(),
+                'phone': req.body.phone.trim(),
+                'address': req.body.address.trim(),
+                'distributionTimeBegin': distributionTimeBegin.substring(1).trim(),
+                'distributionTimeEnd': distributionTimeEnd.substring(1).trim(),
+                'qualification': req.body.qualification.trim(),
+                'distributionfee': req.body.distributionfee.trim(),
+                'sendfee': req.body.sendfee.trim(),
+                'invoice': req.body.invoice.trim(),
+                'coordinate': req.body.coordinate.trim()
+            });
             var classify1 = yield Classify.findOne({
                 where:{
                     name: '全部'
@@ -42,8 +73,5 @@ router.post('/add',function (req, res) {
         console.log(e)
     });
 });
-
-
-
 
 module.exports = router;
