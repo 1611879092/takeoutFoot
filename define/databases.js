@@ -18,7 +18,11 @@ Product.belongsTo(Unit);
 businessInfor.belongsToMany(Classify,{through:'ClassAndBusiness'});
 Classify.belongsToMany(businessInfor,{through:'ClassAndBusiness'});
 
+// Classify.create({name:'全部'});
+
 // sequelize.sync({force:true});
+
+
 
 router.get('/', function(req, res, next) {
     res.send('respond with a resource');

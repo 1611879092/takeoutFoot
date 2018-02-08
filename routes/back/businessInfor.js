@@ -12,6 +12,10 @@ router.get('/', function (req, res, next) {
 router.post('/',function (req, res) {
     co(function* () {
         const businessInfor = yield BusinessInfor.findAndCountAll();
+        for(var i=0;i<businessInfor.rows.length;i++){
+            businessInfor.rows[i].distributionTimeBegin = businessInfor.rows[i].distributionTimeBegin.split(',');
+            businessInfor.rows[i].distributionTimeEnd = businessInfor.rows[i].distributionTimeEnd.split(',');
+        }
         res.status(200).json({code:0,msg:"",count:businessInfor.count,data:businessInfor.rows})
     }).catch(function (e) {
         console.log(e)
@@ -19,7 +23,6 @@ router.post('/',function (req, res) {
 });
 
 router.post('/add',function (req, res) {
-    console.log(req.body)
     if(!req.body.name || req.body.name.trim() == ''){
         res.status(200).json({code:300,'msg':'请输入分类名称'});
         return false;
@@ -46,7 +49,7 @@ router.post('/add',function (req, res) {
             }
         });
         if(businessInfor == null){
-            var bc = yield BusinessInfor.create({
+            const bc = yield BusinessInfor.create({
                 'name': req.body.name.trim(),
                 'phone': req.body.phone.trim(),
                 'address': req.body.address.trim(),
@@ -58,7 +61,7 @@ router.post('/add',function (req, res) {
                 'invoice': req.body.invoice.trim(),
                 'coordinate': req.body.coordinate.trim()
             });
-            var classify1 = yield Classify.findOne({
+            const classify1 = yield Classify.findOne({
                 where:{
                     name: '全部'
                 }

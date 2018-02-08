@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const co = require('co');
 const Classify = require('../../define/Classify');
+const businessInfor = require('../../define/BusinessInfor');
 const Product = require("../../define/Product");
 const Unit = require('../../define/Unit');
 
@@ -21,6 +22,27 @@ router.post('/',function (req, res) {
         console.log(e)
     });
 });
+
+// 获得分店数据
+router.post('/getBusinessInfor',function (req, res) {
+    co(function* () {
+        const classify = yield Classify.findById(req.body.id);
+        const businessArray = yield classify.getBusinessInfors({
+            attributes: ['id','name']
+        });
+        res.status(200).json({code:0,msg:"获取成功",data:businessArray})
+    }).catch(function (e) {
+        console.log(e)
+    });
+});
+
+
+
+
+
+
+
+
 
 // 添加数据
 router.post('/add',function (req, res) {
