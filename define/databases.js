@@ -6,7 +6,7 @@ const Classify = require('./Classify');
 const Product = require('./Product');
 const Unit = require('./Unit');
 const specifications = require('./specifications');
-const businessInfor = require('./BusinessInfor');
+const BusinessInfor = require('./BusinessInfor');
 const ClassAndBusiness =require('./ClassAndBusiness');
 
 Classify.hasMany(Product);
@@ -15,8 +15,8 @@ Product.belongsTo(Classify);
 Unit.hasMany(Product);
 Product.belongsTo(Unit);
 
-businessInfor.belongsToMany(Classify,{through:'ClassAndBusiness'});
-Classify.belongsToMany(businessInfor,{through:'ClassAndBusiness'});
+BusinessInfor.belongsToMany(Classify,{through:'ClassAndBusiness'});
+Classify.belongsToMany(BusinessInfor,{through:'ClassAndBusiness'});
 
 // Classify.create({name:'全部'});
 
