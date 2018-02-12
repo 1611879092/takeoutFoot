@@ -477,7 +477,6 @@
                     dataType: 'json',
                     data: {'keyword': self.keyword, 'page': 1},
                     success: function (data) {
-                        console.log(data)
                         for (var i in data.data) {
                             data.data[i].qualification = data.data[i].qualification.split(',');
                         }
@@ -553,6 +552,7 @@
                 //向后台传递id作为额外参数，是后台可以根据id修改对应的图片地址。
                 var obj = {};
                 obj.id = fishId;
+                obj.page = 'BusinessInfor';
                 return obj;
             },
             enctype: 'multipart/form-data',
@@ -669,13 +669,22 @@
             // Use Ajax to submit form data
             $.post($form.attr('action'), $form.serialize(), function (result) {
                 if (result.code == 200) {
-                    $("#uploadBtn" + uploadBtnId).fileinput("upload");
-                    $.globalMessenger().post({
-                        message: result.msg,
-                        hideAfter: 2,
-                        type: 'success',
-                        showCloseButton: true
-                    });
+                    if ($("#uploadBtn" + uploadBtnId).fileinput("getFilesCount") <= 0) {          //获取选择文件个数
+                        $.globalMessenger().post({
+                            message: result.msg,
+                            hideAfter: 2,
+                            type: 'success',
+                            showCloseButton: true
+                        });
+                    }else {
+                        $("#uploadBtn" + uploadBtnId).fileinput("upload");
+                        $.globalMessenger().post({
+                            message: result.msg,
+                            hideAfter: 2,
+                            type: 'success',
+                            showCloseButton: true
+                        });
+                    }
                 } else {
                     $.globalMessenger().post({
                         message: result.msg,

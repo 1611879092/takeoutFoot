@@ -836,122 +836,125 @@
     <table id="212" parent="8" name="products">
       <Engine>InnoDB</Engine>
     </table>
-    <table id="213" parent="8" name="specifications">
+    <table id="213" parent="8" name="resources">
       <Engine>InnoDB</Engine>
     </table>
-    <table id="214" parent="8" name="units">
+    <table id="214" parent="8" name="specifications">
       <Engine>InnoDB</Engine>
     </table>
-    <column id="215" parent="209" name="id">
+    <table id="215" parent="8" name="units">
+      <Engine>InnoDB</Engine>
+    </table>
+    <column id="216" parent="209" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="216" parent="209" name="name">
+    <column id="217" parent="209" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="217" parent="209" name="phone">
+    <column id="218" parent="209" name="phone">
       <Position>3</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="218" parent="209" name="address">
+    <column id="219" parent="209" name="address">
       <Position>4</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="219" parent="209" name="distributionTimeBegin">
+    <column id="220" parent="209" name="distributionTimeBegin">
       <Position>5</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="220" parent="209" name="distributionTimeEnd">
+    <column id="221" parent="209" name="distributionTimeEnd">
       <Position>6</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="221" parent="209" name="qualification">
+    <column id="222" parent="209" name="qualification">
       <Position>7</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="222" parent="209" name="distributionfee">
+    <column id="223" parent="209" name="distributionfee">
       <Position>8</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="223" parent="209" name="sendfee">
+    <column id="224" parent="209" name="sendfee">
       <Position>9</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="224" parent="209" name="invoice">
+    <column id="225" parent="209" name="invoice">
       <Position>10</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="225" parent="209" name="coordinate">
+    <column id="226" parent="209" name="coordinate">
       <Position>11</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="226" parent="209" name="createdAt">
+    <column id="227" parent="209" name="createdAt">
       <Position>12</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="227" parent="209" name="updatedAt">
+    <column id="228" parent="209" name="updatedAt">
       <Position>13</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="228" parent="209" name="PRIMARY">
+    <key id="229" parent="209" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="229" parent="210" name="createdAt">
+    <column id="230" parent="210" name="createdAt">
       <Position>1</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="230" parent="210" name="updatedAt">
+    <column id="231" parent="210" name="updatedAt">
       <Position>2</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="231" parent="210" name="BusinessInforId">
+    <column id="232" parent="210" name="BusinessInforId">
       <Position>3</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="232" parent="210" name="ClassifyId">
+    <column id="233" parent="210" name="ClassifyId">
       <Position>4</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="233" parent="210" name="ClassifyId">
+    <index id="234" parent="210" name="ClassifyId">
       <ColNames>ClassifyId</ColNames>
     </index>
-    <key id="234" parent="210" name="PRIMARY">
+    <key id="235" parent="210" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>BusinessInforId
 ClassifyId</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="235" parent="210" name="classandbusinesses_ibfk_1">
+    <foreign-key id="236" parent="210" name="classandbusinesses_ibfk_1">
       <ColNames>BusinessInforId</ColNames>
       <RefSchemaName>res</RefSchemaName>
       <RefTableName>businessinfors</RefTableName>
@@ -959,7 +962,7 @@ ClassifyId</ColNames>
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <foreign-key id="236" parent="210" name="classandbusinesses_ibfk_2">
+    <foreign-key id="237" parent="210" name="classandbusinesses_ibfk_2">
       <ColNames>ClassifyId</ColNames>
       <RefSchemaName>res</RefSchemaName>
       <RefTableName>classifies</RefTableName>
@@ -967,110 +970,110 @@ ClassifyId</ColNames>
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="237" parent="211" name="id">
+    <column id="238" parent="211" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="238" parent="211" name="name">
+    <column id="239" parent="211" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="239" parent="211" name="createdAt">
+    <column id="240" parent="211" name="createdAt">
       <Position>3</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="240" parent="211" name="updatedAt">
+    <column id="241" parent="211" name="updatedAt">
       <Position>4</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="241" parent="211" name="PRIMARY">
+    <key id="242" parent="211" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="242" parent="212" name="id">
+    <column id="243" parent="212" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="243" parent="212" name="name">
+    <column id="244" parent="212" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="244" parent="212" name="price">
+    <column id="245" parent="212" name="price">
       <Position>3</Position>
       <DataType>float|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="245" parent="212" name="con">
+    <column id="246" parent="212" name="con">
       <Position>4</Position>
       <DataType>text|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="246" parent="212" name="img">
+    <column id="247" parent="212" name="img">
       <Position>5</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="247" parent="212" name="fabulous">
+    <column id="248" parent="212" name="fabulous">
       <Position>6</Position>
       <DataType>int(11)|0</DataType>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="248" parent="212" name="stock">
+    <column id="249" parent="212" name="stock">
       <Position>7</Position>
       <DataType>int(11)|0</DataType>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="249" parent="212" name="createdAt">
+    <column id="250" parent="212" name="createdAt">
       <Position>8</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="250" parent="212" name="updatedAt">
+    <column id="251" parent="212" name="updatedAt">
       <Position>9</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="251" parent="212" name="ClassifyId">
+    <column id="252" parent="212" name="ClassifyId">
       <Position>10</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="252" parent="212" name="UnitId">
+    <column id="253" parent="212" name="UnitId">
       <Position>11</Position>
       <DataType>int(11)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="253" parent="212" name="ClassifyId">
+    <index id="254" parent="212" name="ClassifyId">
       <ColNames>ClassifyId</ColNames>
     </index>
-    <index id="254" parent="212" name="UnitId">
+    <index id="255" parent="212" name="UnitId">
       <ColNames>UnitId</ColNames>
     </index>
-    <key id="255" parent="212" name="PRIMARY">
+    <key id="256" parent="212" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="256" parent="212" name="products_ibfk_1">
+    <foreign-key id="257" parent="212" name="products_ibfk_1">
       <ColNames>ClassifyId</ColNames>
       <RefSchemaName>res</RefSchemaName>
       <RefTableName>classifies</RefTableName>
@@ -1078,7 +1081,7 @@ ClassifyId</ColNames>
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>set-null</OnDelete>
     </foreign-key>
-    <foreign-key id="257" parent="212" name="products_ibfk_2">
+    <foreign-key id="258" parent="212" name="products_ibfk_2">
       <ColNames>UnitId</ColNames>
       <RefSchemaName>res</RefSchemaName>
       <RefTableName>units</RefTableName>
@@ -1086,61 +1089,105 @@ ClassifyId</ColNames>
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>set-null</OnDelete>
     </foreign-key>
-    <column id="258" parent="213" name="id">
+    <column id="259" parent="213" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="259" parent="213" name="name">
+    <column id="260" parent="213" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="260" parent="213" name="createdAt">
+    <column id="261" parent="213" name="type">
       <Position>3</Position>
-      <DataType>datetime|0</DataType>
-      <NotNull>1</NotNull>
+      <DataType>varchar(255)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="261" parent="213" name="updatedAt">
+    <column id="262" parent="213" name="size">
       <Position>4</Position>
+      <DataType>varchar(255)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="263" parent="213" name="path">
+      <Position>5</Position>
+      <DataType>varchar(255)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="264" parent="213" name="createdAt">
+      <Position>6</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="262" parent="213" name="PRIMARY">
+    <column id="265" parent="213" name="updatedAt">
+      <Position>7</Position>
+      <DataType>datetime|0</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="266" parent="213" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="263" parent="214" name="id">
+    <column id="267" parent="214" name="id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="264" parent="214" name="name">
+    <column id="268" parent="214" name="name">
       <Position>2</Position>
       <DataType>varchar(255)|0</DataType>
-      <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="265" parent="214" name="createdAt">
+    <column id="269" parent="214" name="createdAt">
       <Position>3</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="266" parent="214" name="updatedAt">
+    <column id="270" parent="214" name="updatedAt">
       <Position>4</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="267" parent="214" name="PRIMARY">
+    <key id="271" parent="214" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="272" parent="215" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="273" parent="215" name="name">
+      <Position>2</Position>
+      <DataType>varchar(255)|0</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="274" parent="215" name="createdAt">
+      <Position>3</Position>
+      <DataType>datetime|0</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="275" parent="215" name="updatedAt">
+      <Position>4</Position>
+      <DataType>datetime|0</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <key id="276" parent="215" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>

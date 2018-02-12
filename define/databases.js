@@ -8,6 +8,7 @@ const Unit = require('./Unit');
 const specifications = require('./specifications');
 const BusinessInfor = require('./BusinessInfor');
 const ClassAndBusiness =require('./ClassAndBusiness');
+const Resource =require('./Resource');
 
 Classify.hasMany(Product);
 Product.belongsTo(Classify);
@@ -21,8 +22,6 @@ Classify.belongsToMany(BusinessInfor,{through:'ClassAndBusiness'});
 // Classify.create({name:'全部'});
 
 // sequelize.sync({force:true});
-
-
 
 router.get('/', function(req, res, next) {
     res.send('respond with a resource');

@@ -4,6 +4,7 @@ const multiparty = require('multiparty');
 const fs = require('fs');
 const co = require('co');
 const BusinessInfor = require('../define/BusinessInfor');
+const Product = require('../define/Product');
 
 router.post('/uploading', function (req, res) {
     //生成multiparty对象，并配置上传目标路径
@@ -11,7 +12,7 @@ router.post('/uploading', function (req, res) {
     const form = new multiparty.Form({uploadDir: './public/files/'});
     //上传完成后处理
     form.parse(req, function (err, fields, files) {
-        // console.log(fields.id[0])
+        console.log(fields.page[0]);
         const filesTmp = JSON.stringify(files);
         if (err) {
             console.log('parse error: ' + err);
@@ -34,13 +35,26 @@ router.post('/uploading', function (req, res) {
                     });
                 }
             }
-            BusinessInfor.update({
-                qualification:qualification.substring(1)
-            },{
-                where:{
-                    id:fields.id[0]
-                }
-            });
+            switch (fields.page[0]){
+                case 'Product':
+                    Product.update({
+                        img:qualification.substring(1)
+                    },{
+                        where:{
+                            id:fields.id[0]
+                        }
+                    });
+                    break;
+                case 'BusinessInfor':
+                    BusinessInfor.update({
+                        qualification:qualification.substring(1)
+                    },{
+                        where:{
+                            id:fields.id[0]
+                        }
+                    });
+                    break;
+            }
             res.status(200).json({code:200,msg:"上传成功"})
         }
     });

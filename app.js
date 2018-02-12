@@ -17,6 +17,7 @@ const Bshops = require('./routes/back/shops');
 const menu = require('./routes/back/menu');
 const unit = require('./routes/back/unit');
 const businessInfor = require('./routes/back/businessInfor');
+const resource = require('./routes/back/resource');
 
 
 const app = express();
@@ -43,6 +44,7 @@ app.use('/back/shops', Bshops);
 app.use('/back/menu', menu);
 app.use('/back/units', unit);
 app.use('/back/businessInfor', businessInfor);
+app.use('/back/resource', resource);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

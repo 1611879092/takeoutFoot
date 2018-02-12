@@ -3,21 +3,26 @@
 <head>
     <title><%= title %></title>
     <% include head.ejs %>
-    <link href="/stylesheets/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="/stylesheets/fileinput.min.css" media="all" rel="stylesheet" type="text/css"/>
+    <style>
+        .table img {
+            width: 30px
+        }
+    </style>
 </head>
 <body>
 <div id="app">
     <div class="page-header">
-        <h4>分类列表</h4>
+        <h4>商品列表</h4>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
             <button type="button" class="btn btn-info pull-right" data-toggle="modal"
                     data-target=".bs-example-modal-lg">新增
             </button>
-            <form class="form-inline" id="filterForm" style="display: inline-block">
+            <form class="form-inline" style="display: inline-block">
                 <div class="form-group">
-                    <input type="text" name="name" class="form-control" placeholder="请输入关键字">
+                    <input type="text" v-model="keyword" class="form-control" placeholder="请输入关键字">
                 </div>
                 <button type="button" @click="filter()" class="btn btn-default">筛选</button>
             </form>
@@ -29,20 +34,29 @@
                     <th style="width: 40px"><input type="checkbox"></th>
                     <th>id</th>
                     <th>名称</th>
-                    <th>所属分店</th>
+                    <th>价格</th>
+                    <th>所属类别</th>
+                    <th>简介</th>
+                    <th>图片</th>
                     <th style="width: 200px">操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-if="shops.length != 0" v-for="shop in shops">
+                <tr v-if="shops.length != 0" v-for="(shop,index) in shops">
                     <td><input type="checkbox"></td>
                     <td v-text="shop.id"></td>
                     <td v-text="shop.name"></td>
+                    <td v-text="shop.price"></td>
+                    <td v-text="shop.Classify.name"></td>
+                    <td v-text="shop.con"></td>
+                    <td>
+                        <img :src="shop.img" alt="">
+                    </td>
                     <td>
                         <button type="button" class="btn btn-primary btn-xs editor" data-toggle="modal"
-                                data-target="#changeModel" :data-name="menu.name" :data-id="menu.id">编辑
+                                data-target="#changeModel" @click="editor(index)">编辑
                         </button>
-                        <button type="button" class="btn btn-danger btn-xs" @click="delect(menu.id)">删除</button>
+                        <button type="button" class="btn btn-danger btn-xs" @click="delect(shop.id)">删除</button>
                     </td>
                 </tr>
                 <tr v-if="shops.length == 0">
@@ -52,7 +66,7 @@
             </table>
         </div>
         <div class="panel-footer">
-            <button type="button" class="btn btn-info">新增</button>
+            <div id="page"></div>
         </div>
     </div>
     <!--新增模态框-->
@@ -87,7 +101,7 @@
                         <div class="form-group">
                             <label for="claId" class="col-sm-2 control-label">所属分类</label>
                             <div class="col-sm-10">
-                                <select class="form-control" name="claId" id="claId" v-model="claId">
+                                <select class="form-control" name="claId" id="claId">
                                     <option :value="cla.id" v-for="cla in classify">{{cla.name}}</option>
                                 </select>
                             </div>
@@ -95,7 +109,7 @@
                         <div class="form-group">
                             <label for="stock" class="col-sm-2 control-label">商品库存</label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" name="stock" id="stock" required
+                                <input type="number" class="form-control" name="stock" id="stock"
                                        placeholder="请输入商品库存">
                             </div>
                         </div>
@@ -108,12 +122,73 @@
                         <div class="form-group">
                             <label for="price" class="col-sm-2 control-label">图片</label>
                             <div class="col-sm-10">
-                                <input type="file" id="uploadBtn" class="file" data-preview-file-type="text" value="上传图片">
+                                <input type="file" name="inputFile" id="uploadBtn" multiple class="file-loading">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-info">新增</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--修改模态框-->
+    <div class="modal fade" id="changeModel" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myLargeModalLabel">修改分店信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" enctype="multipart/form-data" action="shops/change"
+                          id="changeForm">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="name" id="name" required
+                                       placeholder="请输入名称" :value="changeData.name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="price" class="col-sm-2 control-label">价格</label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon">¥</span>
+                                    <input type="number" class="form-control" name="price" id="price" required
+                                           placeholder="请输入价格" :value="changeData.price">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="claId" class="col-sm-2 control-label">所属分类</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="claId" id="claId" :value="changeData.ClassifyId">
+                                    <option :value="cla.id" v-for="cla in classify">{{cla.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="stock" class="col-sm-2 control-label">商品库存</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" name="stock" id="stock"
+                                       placeholder="请输入商品库存" :value="changeData.stock">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="con" class="col-sm-2 control-label">详细介绍</label>
+                            <div class="col-sm-10">
+                                <textarea name="con" id="con" placeholder="请输入详细介绍" class="form-control" v-text="changeData.con"></textarea>
+                            </div>
+                        </div>
+                        <div id="imagesBox"></div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-info">修改</button>
                             </div>
                         </div>
                     </form>
@@ -145,31 +220,20 @@
         data: {
             classify: [],
             shops: [],
-            units: [],
-            claId: 1
+            changeData: [],
+            keyword: ''
         },
         created: function () {
             const self = this;
             // 获得所有商品
-            $.ajax({
-                url: "shops",
-                type: 'POST',
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data)
-                    self.shops = data.data
-                },
-                error: function (e) {
-                    console.log(e)
-                }
-            });
+            this.getshops()
             // 获得所有分类
             $.ajax({
                 url: "menu",
                 type: 'POST',
                 dataType: 'json',
                 success: function (data) {
-                    self.classify = data.data
+                    self.classify = data.data;
                 },
                 error: function (e) {
                     console.log(e)
@@ -177,119 +241,217 @@
             });
         },
         methods: {
-            upload:function () {
+            filter: function () {
+                this.getshops()
+            },
+            getshops: function () {
+                const self = this;
+                $.ajax({
+                    url: "shops",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'keyword': self.keyword, 'page': 1},
+                    success: function (data) {
+                        for (var i in data.data) {
+                            data.data[i].img = data.data[i].img.split(',');
+                        }
+                        self.shops = data.data;
+                        self.laypage(self.keyword,data.count)
+                    },
+                    error: function (e) {
+                        console.log(e)
+                    }
+                });
+            },
+            laypage: function (keyword, count) {
+                const self = this;
+                laypage({
+                    cont: 'page',
+                    pages: count, //可以叫服务端把总页数放在某一个隐藏域，再获取。假设我们获取到的是18
+                    jump: function (e, first) { //触发分页后的回调
+                        if (!first) { //一定要加此判断，否则初始时会无限刷新
+                            //location.href = '?page=' + e.curr;
+                            $.ajax({
+                                url: "shops",
+                                type: 'POST',
+                                data: {'keyword': keyword, 'page': e.curr},
+                                dataType: 'json',
+                                success: function (data) {
+                                    self.shops = data.data;
+                                },
+                                error: function (e) {
+                                    console.log(e.responseText)
+                                }
+                            });
+                        }
+                    }
+                });
+            },
+            delect: function (id) {
+                const delect = confirm("确定删除这个商品？");
+                if (delect) {
+                    $.ajax({
+                        url: "shops/delete",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'id': id},
+                        success: function (data) {
+                            $.globalMessenger().post({
+                                message: data.msg,
+                                hideAfter: 2,
+                                type: 'success',
+                                showCloseButton: true
+                            });
+                        },
+                        error: function (e) {
+                            console.log(e)
+                        }
+                    });
+                }
+            },
+            editor: function (i) {
+                const self = this;
+                this.changeData = this.shops[i];
+                console.log(this.changeData)
+                const html = '<div class="form-group">\n' +
+                    '                                <label for="price" class="col-sm-2 control-label">图片</label>\n' +
+                    '                                <div class="col-sm-10">\n' +
+                    '                                    <input type="file" name="inputFile" id="uploadBtn' + i + '" class="file">\n' +
+                    '                                </div>\n' +
+                    '                            </div>';
+                $("#imagesBox").html(html);
+                $("#uploadBtn" + i).fileinput({
+                    language: 'zh',
+                    uploadUrl: '/file/uploading',
+                    allowedFileExtensions: ['jpg', 'png', 'bmp', 'jpeg'],//接收的文件后缀
+                    overwriteInitial: false,
+                    dropZoneEnabled: false,
+                    autoReplace:true,
+                    uploadAsync: false,
+                    showUpload: false,
+                    showPreview: true,              //展前预览
+                    showRemove: false,              // 是否显示移除按钮
+                    showCaption: true,             //是否显示标题
+                    maxFileCount: 0,                //上传图片最大数量
+                    initialPreviewAsData: true,
+                    initialPreview: this.changeData.img,
+                    initialPreviewConfig: [
+                        {url: "/file/delete"},
+                        {url: "/file/delete"},
+                        {url: "/file/delete"},
+                        {url: "/file/delete"},
+                        {url: "/file/delete"}
+                    ],
+                    layoutTemplates: {
+                        // actionDelete:'', //去除上传预览的缩略图中的删除图标
+                        actionUpload: '',//去除上传预览缩略图中的上传图片；
+                        actionZoom: ''   //去除上传预览缩略图中的查看详情预览的缩略图标。
+                    },
+                    uploadExtraData: function (previewId, index) {
+                        //向后台传递id作为额外参数，是后台可以根据id修改对应的图片地址。
+                        var obj = {};
+                        obj.id = self.businessList[i].id;
+                        return obj;
+                    },
+                    enctype: 'multipart/form-data',
+                }).on("filebatchuploadsuccess", function (event, data) {
+
+                }).on('fileerror', function (event, data, msg) {  //一个文件上传失败
+                    console.log('文件上传失败！' + msg);
+                });
 
             }
         }
     });
 </script>
 <script>
+    var fishId = '';
     $("#uploadBtn").fileinput({
-        language: 'zh', //设置语言
+        language: 'zh',
+        uploadUrl: '/file/uploading',
+        allowedFileExtensions: ['jpg', 'png', 'bmp', 'jpeg'],//接收的文件后缀
+        overwriteInitial: false,
+        dropZoneEnabled: false,
+        uploadAsync: false,
+        showUpload: false,              //是否显示上传按钮
+        showPreview: true,              //展前预览
+        showCaption: false,             //是否显示标题
+        maxFileCount: 1,
+        layoutTemplates: {
+            // actionDelete:'', //去除上传预览的缩略图中的删除图标
+            actionUpload: '',//去除上传预览缩略图中的上传图片；
+            actionZoom: ''   //去除上传预览缩略图中的查看详情预览的缩略图标。
+        },
+        uploadExtraData: function (previewId, index) {
+            //向后台传递id作为额外参数，是后台可以根据id修改对应的图片地址。
+            var obj = {};
+            obj.id = fishId;
+            obj.page = 'Product';
+            return obj;
+        },
+        enctype: 'multipart/form-data',
+    }).on("filebatchuploadsuccess", function (event, data) {
+
+    }).on('fileerror', function (event, data, msg) {  //一个文件上传失败
+        console.log('文件上传失败！' + msg);
     });
 </script>
 <script>
-    layui.use(['element', 'table', 'layer', 'form', 'upload'], function () {
-        const element = layui.element, table = layui.table, layer = layui.layer, form = layui.form,
-            upload = layui.upload;
-        table.init('shops', { //转化静态表格
-            page: true
-        });
-        table.on('tool(shops)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-            const data = obj.data; //获得当前行数据
-            const layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-            const tr = obj.tr; //获得当前行 tr 的DOM对象
-            if (layEvent === 'detail') { //查看
-                //do somehing
-            } else if (layEvent === 'del') { //删除
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-                    layer.close(index);
-                    $.ajax({
-                        url: "shops/delete",
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {'id': data.id},
-                        success: function (data) {
-                            if (data.code == 200) {
-                                layer.msg(data.msg);
-                            }
-                        },
-                        error: function (e) {
-                            console.log(e)
-                        }
-                    });
-                });
-            } else if (layEvent === 'edit') { //编辑
-                $("#addShop #name").val(data.name)
-                $("#addShop #price").val(data.price)
-                console.log(data)
-                $("#addShop #claId").val(data.claId)
-                $("#addShop #con").val(data.con)
-                $("#addShop #picture").attr('src', data.img)
-                $("#addShop #shopImg").val(data.img)
-                $("#addShop #shopid").val(data.id)
-                layer.open({
-                    type: 1,
-                    content: $('#addShop'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                    area: '500px',
-                    cancel: function (index, layero) {
-                        layer.close(index)
-                        $("#addShop input,#addShop textarea").val('');
-                        $("#addShop img").attr('src', '');
-                        return false;
+    // 添加店铺
+    $('#addForm').formValidation({
+        message: 'This value is not valid',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                validators: {
+                    notEmpty: {
+                        message: '请输入名称'
                     }
-                });
-            }
-        });
-        //监听提交
-        form.on('submit(formDemo)', function (data) {
-            $.ajax({
-                url: "shops/add",//待完成
-                type: 'POST',//提交方式 GET POST PUT DELETE
-                dataType: 'json',
-                data: data.field,
-                success: function (data) {
-                    if (data.code == 200) {
-                        layer.msg(data.msg);
-                        table.reload('shops', {
-                            url: '/back/shops'
-                        });
-                    }
-                },
-                error: function (e) {
-                    console.log(e)
                 }
-            });
-            return false;
-        });
+            }
+        }
+    }).on('success.form.fv', function (e) {
+        // Prevent form submission
+        e.preventDefault();
 
-        //选择图片后上传
-        const uploadInst = upload.render({
-            elem: '#test1' //绑定元素
-            , url: '/file/uploading'
-            , done: function (res) {
-                //上传完毕回调
-                $("#picture").attr("src", '/' + res.data.file[0].path.substr(7));
-                $("#shopImg").val('/' + res.data.file[0].path.substr(7));
-            }, error: function () {
-                //请求异常回调
-            }
-        });
-        // 点击新增按钮
-        $("#add").click(function () {
-            layer.open({
-                type: 1,
-                content: $('#addShop'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                area: '500px',
-                cancel: function (index, layero) {
-                    layer.close(index)
-                    $("#addShop input,#addShop textarea").val('');
-                    $("#addShop img").attr('src', '');
-                    return false;
+        // Get the form instance
+        const $form = $(e.target);
+
+        // Get the FormValidation instance
+        const bv = $form.data('formValidation');
+        // Use Ajax to submit form data
+        $.post($form.attr('action'), $form.serialize(), function (result) {
+            if (result.code == 200) {
+                if ($('#uploadBtn').fileinput("getFilesCount") <= 0) {          //获取选择文件个数
+                    $.globalMessenger().post({
+                        message: result.msg,
+                        hideAfter: 2,
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                } else {
+                    fishId = result.data.id;
+                    $("#uploadBtn").fileinput("upload");
+                    $.globalMessenger().post({
+                        message: result.msg,
+                        hideAfter: 2,
+                        type: 'success',
+                        showCloseButton: true
+                    });
                 }
-            });
-        })
+            } else {
+                $.globalMessenger().post({
+                    message: result.msg,
+                    hideAfter: 2,
+                    type: 'info',
+                    showCloseButton: true
+                });
+            }
+        }, 'json');
     });
 </script>
 </html>

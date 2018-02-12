@@ -53,13 +53,13 @@ router.post('/filter',function (req, res) {
 });
 // 添加分类
 router.post('/add',function (req, res) {
-    if(!req.body.BusinessInforId || req.body.BusinessInforId.trim() == '' ){
+    /*if(!req.body.BusinessInforId || req.body.BusinessInforId.trim() == '' ){
         res.status(200).json({code:300,msg:"请选择分店"});
         return false;
     }else if(!req.body.name || req.body.name.trim() == ''){
         res.status(200).json({code:300,msg:"请输入分类名称"});
         return false;
-    }
+    }*/
     co(function* () {
         const findClassify = yield Classify.findOne({
             where:[{
@@ -76,9 +76,10 @@ router.post('/add',function (req, res) {
                     console.log(e)
                 });
             }else if(typeof req.body.BusinessInforId == 'object'){
-                for (let value of req.body.BusinessInforId){
+                for (var value in req.body.BusinessInforId){
+                    console.log(value)
                     co(function* () {
-                        var bs = yield BusinessInfor.findById(value.trim());
+                        var bs = yield BusinessInfor.findById(req.body.BusinessInforId[value].trim());
                         yield cs.addBusinessInfor(bs);
                     }).catch(function (e) {
                         console.log(e)
