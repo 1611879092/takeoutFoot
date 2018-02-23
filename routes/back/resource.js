@@ -45,7 +45,7 @@ router.post('/add', function (req, res) {
         if (err) {
             console.log('parse error: ' + err);
         } else {
-            if(files.inputFile.length != 'undefined'){
+            if (files.inputFile.length != 'undefined') {
                 for (var i = 0; i < files.inputFile.length; i++) {
                     const inputFile = files.inputFile[i];
                     const uploadedPath = inputFile.path;
@@ -65,16 +65,85 @@ router.post('/add', function (req, res) {
                             'name': inputFile.originalFilename,
                             'type': inputFile.headers['content-type'],
                             'size': inputFile.size,
-                            'path': 'files/'+inputFile.originalFilename,
+                            'path': 'files/' + inputFile.originalFilename,
                         });
                     }).catch(function (e) {
                         console.log(e)
                     })
                 }
             }
-            res.status(200).json({code:200,msg:"上传成功"})
+            res.status(200).json({code: 200, msg: "上传成功"})
         }
     });
 });
 
+// 删除
+router.post('/delete', function (req, res) {
+    co(function* () {
+        const cs = yield Resource.findOne({
+            where: [{
+                id: req.body.id.trim()
+            }]
+        });
+        fs.unlink('public\\' + cs.path, function (err) {
+            co(function* () {
+                yield Resource.destroy({'where': {'id': req.body.id.trim()}});
+                res.status(200).json({code: 200, msg: "删除成功"})
+            }).catch(function (e) {
+                console.log(e)
+            });
+        });
+    }).catch(function (e) {
+        console.log(e)
+    });
+});
+
+// 替换
+router.post('/replace', function (req, res) {
+    co(function* () {
+        //生成multiparty对象，并配置上传目标路径
+        const form = new multiparty.Form({uploadDir: './public/files/'});
+        //上传完成后处理
+        form.parse(req, function (err, fields, files) {
+            // const filesTmp = JSON.stringify(files);
+            if (err) {
+                console.log('parse error: ' + err);
+            } else {
+                co(function* () {
+                    const cs = yield Resource.findOne({
+                        where: [{
+                            id: fields.id[0].trim()
+                        }]
+                    });
+                    fs.unlink('public\\' + cs.path, function (err) {
+                        co(function* () {
+                            if (files.inputFile.length != 'undefined') {
+                                for (var i = 0; i < files.inputFile.length; i++) {
+                                    const inputFile = files.inputFile[i];
+                                    const uploadedPath = inputFile.path;
+                                    // qualification += ',/files/' + inputFile.originalFilename;
+                                    //重命名为真实文件名
+                                    fs.rename(uploadedPath, './public/' + cs.path, function (err) {
+                                        if (err) {
+                                            console.log(err)
+                                            return false;
+                                        } else {
+                                            res.status(200).json({code: 200, msg: "替换成功"})
+                                        }
+                                    });
+                                }
+                            }
+                        }).catch(function (e) {
+                            console.log(e)
+                        });
+                    });
+                }).catch(function (e) {
+                    console.log(e)
+                })
+            }
+        });
+    }).catch(function (e) {
+        console.log(e)
+    });
+});
 module.exports = router;

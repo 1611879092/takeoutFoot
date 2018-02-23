@@ -18,7 +18,7 @@ router.post('/uploading', function (req, res) {
             console.log('parse error: ' + err);
         } else {
             console.log(files.inputFile.length);
-            if(files.inputFile.length != 'undefined'){
+            if (files.inputFile.length != 'undefined') {
                 for (var i = 0; i < files.inputFile.length; i++) {
                     const inputFile = files.inputFile[i];
                     const uploadedPath = inputFile.path;
@@ -35,33 +35,33 @@ router.post('/uploading', function (req, res) {
                     });
                 }
             }
-            switch (fields.page[0]){
+            switch (fields.page[0]) {
                 case 'Product':
                     Product.update({
-                        img:qualification.substring(1)
-                    },{
-                        where:{
-                            id:fields.id[0]
+                        img: qualification.substring(1)
+                    }, {
+                        where: {
+                            id: fields.id[0]
                         }
                     });
                     break;
                 case 'BusinessInfor':
                     BusinessInfor.update({
-                        qualification:qualification.substring(1)
-                    },{
-                        where:{
-                            id:fields.id[0]
+                        qualification: qualification.substring(1)
+                    }, {
+                        where: {
+                            id: fields.id[0]
                         }
                     });
                     break;
             }
-            res.status(200).json({code:200,msg:"上传成功"})
+            res.status(200).json({code: 200, msg: "上传成功"})
         }
     });
 });
 
 router.post('/delete', function (req, res) {
-    res.status(200).json({code:200,msg:"删除成功"})
+    res.status(200).json({code: 200, msg: "删除成功"})
     return false
 });
 

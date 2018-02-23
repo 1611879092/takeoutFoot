@@ -6,6 +6,11 @@
     <% include head.ejs %>
     <link rel="stylesheet" href="/stylesheets/bootstrap-datetimepicker.min.css">
     <link href="/stylesheets/fileinput.min.css" media="all" rel="stylesheet" type="text/css"/>
+    <style>
+        .yingyezizhi img {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
@@ -166,16 +171,21 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="price" class="col-sm-2 control-label">营业资质</label>
+                        <div class="form-group yingyezizhi">
+                            <label class="col-sm-2 control-label">营业资质</label>
                             <div class="col-sm-10">
-                                <input type="file" name="inputFile" id="uploadBtn" multiple class="file-loading">
+                                <div style="margin-top: 15px;overflow: hidden" v-if="resourceList.length != 0">
+                                    <label class="col-sm-3" v-for="(res,key) in resourceList">
+                                        <input type="checkbox" :value="res.path" name="img" v-model="imgs">
+                                        <img :src="'/'+res.path" alt="">
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <input type="hidden" name="qualification" id="qualification">
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-default">新增</button>
+                                <button type="button" class="btn btn-default" @click="submit()">新增</button>
                             </div>
                         </div>
                     </form>
@@ -294,7 +304,6 @@
 </div>
 </body>
 <% include foot.ejs %>
-
 <!--时间选择插件begin-->
 <script src="/javascripts/bootstrap-datetimepicker.min.js"></script>
 <script src="/javascripts/bootstrap-datetimepicker.zh-CN.js"></script>
@@ -323,14 +332,19 @@
         data: {
             distributionTimeID: 1,
             businessList: [],
+            resourceList: [],
             caninvoice: false,
             keyword: '',
-            changeBusinessData: []
+            changeBusinessData: [],
+            imgs:[]
         },
         created: function () {
-            this.getbusiness()
+            this.getbusiness();
         },
         methods: {
+            submit:function () {
+                alert(this.imgs)
+            },
             editor: function (i) {
                 uploadBtnId = i;
                 const self = this;
@@ -482,6 +496,19 @@
                         }
                         self.businessList = data.data;
                         self.laypage(self.keyword, data.count);
+                    },
+                    error: function (e) {
+                        console.log(e)
+                    }
+                });
+                $.ajax({
+                    url: "resource/",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {'keyword': '', 'page': 1},
+                    success: function (data) {
+                        console.log(data)
+                        self.resourceList = data.data;
                     },
                     error: function (e) {
                         console.log(e)

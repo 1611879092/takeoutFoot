@@ -13,9 +13,33 @@
             word-wrap: break-word;
             word-break: normal;
         }
-        .imgBox{position: relative}
-        .operation{position: absolute;bottom: 0;left: 0;width: 100%;height: 40px;line-height: 40px;background: rgba(0,0,0,0.7);}
-        .operation a{color: #fff;width: 32.19%;display: inline-block;height: 100%;text-align: center}
+
+        .panel-body .col-sm-2:hover .operation {
+            display: inline-block;
+        }
+
+        .imgBox {
+            position: relative
+        }
+
+        .operation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .operation a {
+            color: #fff;
+            width: 48.5%;
+            display: inline-block;
+            height: 100%;
+            text-align: center
+        }
     </style>
 </head>
 <body>
@@ -36,14 +60,13 @@
             </form>
         </div>
         <div class="panel-body">
-            <div style="margin-top: 15px;" v-if="resourceList.length != 0">
+            <div style="margin-top: 15px;overflow: hidden" v-if="resourceList.length != 0">
                 <div class="col-sm-2" v-for="(res,key) in resourceList">
                     <div class="imgBox">
                         <img :src="'/'+res.path" alt="">
                         <div class="operation">
-                            <a href="javascript:;">重命名</a>
-                            <a href="javascript:;">替换</a>
-                            <a href="javascript:;">删除</a>
+                            <a href="javascript:;" @click="replace(res.id)">替换</a>
+                            <a href="javascript:;" @click="delect(res.id)">删除</a>
                         </div>
                     </div>
                     <p v-text="res.name"></p>
@@ -66,10 +89,32 @@
                     <h4 class="modal-title" id="myLargeModalLabel">新增资源</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" enctype="multipart/form-data" action="businessInfor/add" id="addForm">
+                    <form class="form-horizontal" enctype="multipart/form-data">
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <input type="file" name="inputFile" id="uploadBtn" multiple class="file-loading">
+                                <input type="file" name="inputFile" id="uploadBtn" class="file">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--替换模态框-->
+    <div class="modal fade bs-example-modal-replace" id="replaceModel" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myLargeModalLabel">替换资源</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="file" name="inputFile" id="replaceBtn" class="file">
                             </div>
                         </div>
                     </form>
@@ -95,10 +140,11 @@
 <script src="/javascripts/fileinput.min.js"></script>
 <!-- optionally uncomment line below for loading your theme assets for a theme like Font Awesome (`fa`) -->
 <!-- script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/themes/fa/theme.min.js"></script -->
-<!-- optionally if you need translation for your language then include  locale file as mentioned below -->
+<!-- optionally if you need translation for your language then include locale file as mentioned below -->
 <script src="/javascripts/zh.min.js"></script>
 <!--上传插件end-->
 <script>
+    var fishId;
     var app = new Vue({
         el: '#app',
         data: {
@@ -113,10 +159,10 @@
         },
         methods: {
             delect: function (id) {
-                const delect = confirm("确定删除分类？");
+                const delect = confirm("确定删除资源，删除后可能曹成图片显示不正常现象？");
                 if (delect) {
                     $.ajax({
-                        url: "businessInfor/delete",
+                        url: "resource/delete",
                         type: 'POST',
                         dataType: 'json',
                         data: {'id': id},
@@ -133,6 +179,10 @@
                         }
                     });
                 }
+            },
+            replace: function (id) {
+                $('#replaceModel').modal('toggle');
+                fishId = id;
             },
             laypage: function (keyword, count) {
                 const self = this;
@@ -166,7 +216,6 @@
                     dataType: 'json',
                     data: {'keyword': self.keyword, 'page': 1},
                     success: function (data) {
-                        console.log(data)
                         self.resourceList = data.data;
                         self.laypage(self.keyword, data.count);
                     },
@@ -176,7 +225,7 @@
                 });
             },
             filter: function () {
-                this.getbusiness()
+                this.getresource();
             }
         }
     });
@@ -200,6 +249,28 @@
         enctype: 'multipart/form-data',
     }).on("filebatchuploadsuccess", function (event, data) {
 
+    }).on('fileerror', function (event, data, msg) {  //一个文件上传失败
+        console.log('文件上传失败！' + msg);
+    });
+    $("#replaceBtn").fileinput({
+        language: 'zh',
+        uploadUrl: 'resource/replace',
+        allowedFileExtensions: ['jpg', 'png', 'bmp', 'jpeg'],//接收的文件后缀
+        overwriteInitial: true,
+        dropZoneEnabled: true,
+        uploadAsync: false,
+        showUpload: true,              //是否显示上传按钮
+        showPreview: true,              //展前预览
+        showCaption: false,             //是否显示标题
+        uploadExtraData: function (previewId, index) {
+            //向后台传递id作为额外参数，是后台可以根据id修改对应的图片地址。
+            var obj = {};
+            obj.id = fishId;
+            return obj;
+        },
+        enctype: 'multipart/form-data',
+    }).on("filebatchuploadsuccess", function (event, data) {
+        console.log(data);
     }).on('fileerror', function (event, data, msg) {  //一个文件上传失败
         console.log('文件上传失败！' + msg);
     });
